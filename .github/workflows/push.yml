@@ -16,11 +16,17 @@ jobs:
         with:
           tool-cache: true
 
+      # 装新版 cog（v0.20.0 的 manifest 格式 Replicate registry 才接受），但不传 token，
+      # 避免触发 cog login 对 CLI-auth-token 的格式校验
       - name: Setup Cog
         uses: replicate/setup-cog@v2
         with:
-          token: ${{ secrets.REPLICATE_API_TOKEN }}
-          cog-version: v0.19.3
+          cog-version: v0.20.0
+
+      # 绕过 cog login：直接用 API token 做 docker registry 认证（r8.im 接受 API token），
+      # cog push 复用 docker 的登录态
+      - name: Docker login to r8.im
+        run: echo "${{ secrets.REPLICATE_API_TOKEN }}" | docker login r8.im -u xaoyaozi --password-stdin
 
       - name: Push to Replicate
         run: cog push r8.im/xaoyaozi/propainter
