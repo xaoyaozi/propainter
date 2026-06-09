@@ -8,6 +8,16 @@ build:
   # a list of ubuntu apt packages to install
   system_packages:
     - "libgl1-mesa-glx"
+    # PyAV(av==10.0.0) 在新构建环境下回退到源码编译，需要 ffmpeg 开发库（pkg-config 找 libav*）
+    - "pkg-config"
+    - "ffmpeg"
+    - "libavformat-dev"
+    - "libavcodec-dev"
+    - "libavdevice-dev"
+    - "libavutil-dev"
+    - "libavfilter-dev"
+    - "libswscale-dev"
+    - "libswresample-dev"
 
   # python version in the form '3.11' or '3.11.4'
   python_version: "3.8"
