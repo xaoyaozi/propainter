@@ -36,6 +36,23 @@ class Predictor(BasePredictor):
         output = "results"
         save_frames=False
 
+        # --- fix（自部署补丁）：Replicate/cog 平台升级后下载 input 文件会丢掉后缀名，
+        # 而 ProPainter 全靠后缀判断文件类型（下方 mask 校验 + inference_propainter.py
+        # 里 endswith 的 image/video 分支）。本服务后端只产出 mp4 视频 + png 静态 mask，
+        # 进函数后立即按固定后缀重命名（copy 而非 rename：cog 下载目录可能跨设备/只读）。
+        import shutil, pathlib
+        def _ensure_suffix(p, suffix):
+            p = pathlib.Path(str(p))
+            if p.suffix.lower() == suffix:
+                return p
+            newp = p.with_suffix(suffix)
+            shutil.copy(str(p), str(newp))
+            return newp
+        video = _ensure_suffix(video, ".mp4")
+        if mask:
+            mask = _ensure_suffix(mask, ".png")
+        # --- end fix ---
+
         if mode in ['video_inpainting']:
             if not mask:
                 raise ValueError("Video inpainting needs a mask input.")
