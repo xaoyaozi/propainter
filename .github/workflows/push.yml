@@ -20,6 +20,7 @@ jobs:
         uses: replicate/setup-cog@v2
         with:
           token: ${{ secrets.REPLICATE_API_TOKEN }}
+          cog-version: v0.20.0
 
       - name: Push to Replicate
         run: cog push r8.im/xaoyaozi/propainter
