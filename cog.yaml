@@ -25,7 +25,7 @@ build:
   # a list of packages in the format <package-name>==<version>
   python_packages:
     - "addict==2.4.0"
-    - "av==10.0.0"
+    - "av==12.3.0"
     - "einops==0.7.0"
     - "future==0.18.3"
     - "imageio-ffmpeg==0.4.9"
